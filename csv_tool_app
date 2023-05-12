@@ -1,0 +1,83 @@
+#!/usr/bin/python3
+
+"""
+    CSV utility app
+"""
+
+import os
+import sys
+import argparse
+import datetime
+
+import csv_tool
+
+# --- Constants --- #
+DEFAULT_OUTPUT_FILE_NAME="results"
+DEFAULT_WORKDIR = "."
+
+# --- Utils --- #
+def _is_valid_file(file: str) -> bool:
+    return os.path.isfile(file)
+
+def _is_valid_dir(path: str) -> bool:
+    return os.path.isdir(path)
+
+def _create_dirs(path: str, exist_ok: bool =False) -> None:
+    os.makedirs(path, 0o777, exist_ok)
+
+def _parse_args() -> tuple:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-i",
+        "--input_file",
+        help="Input CSV file to process",
+        type=str,
+        required=True
+    )
+
+    parser.add_argument(
+        "-o",
+        "--output_file",
+        help="Output CSV file name",
+        type=str,
+        default=DEFAULT_OUTPUT_FILE_NAME
+    )
+
+    parser.add_argument(
+        "-w",
+        "--workdir",
+        help="Workdirectory",
+        type=str,
+        default=DEFAULT_WORKDIR
+    )
+
+    return parser.parse_args()
+
+def _generate_timestamp() -> str:
+    now = datetime.datetime.now()
+    timestamp = now.strftime("%Y%m%d_%H%M%S")
+
+    return timestamp
+
+def main():
+    """
+        Main entry point
+    """
+    args = _parse_args()
+    tool = csv_tool.CsvTool()
+
+    if not _is_valid_file(args.input_file):
+        print(f"--- Err: File {args.input_file} not found!")
+        return -1
+
+    timestamp = _generate_timestamp()
+    if not _is_valid_dir(args.workdir):
+        _create_dirs(args.workdir)
+
+    output_file_path = f"{args.workdir}/{args.output_file}_{timestamp}.csv"
+    tool.multiply(args.input_file, output_file_path)
+
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())
