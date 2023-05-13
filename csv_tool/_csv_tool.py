@@ -49,7 +49,8 @@ class CsvTool():
                     else:
                         print(f"--- Err: Invalid email address: {email}!")
             except csv.Error as err:
-                CsvToolException(f'file {input_file}, line {reader.line_num}: {err}')
+                raise f'file {input_file}, line {reader.line_num}: {err}'
+
         print(f"--- Info: Output saved in: {output_file}")
 
 class CsvToolException(Exception):
