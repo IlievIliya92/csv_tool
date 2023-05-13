@@ -1,6 +1,9 @@
-import os.path
-from _project import NAME, VERSION, LICENSE, DESCRIPTION, URL, PACKAGES, REQUIRES
+"""
+    Project Set Up
+"""
 from setuptools import setup
+
+from _project import NAME, VERSION, LICENSE, DESCRIPTION, URL, PACKAGES, REQUIRES
 
 setup(
     name = NAME,
